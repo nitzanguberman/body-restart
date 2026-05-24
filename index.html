@@ -2,134 +2,408 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Body Restart — Week 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Body Restart" />
+  <title>Body Restart</title>
   <style>
-    :root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; color: #222; }
-    body { margin: 0; background: #f7f4ef; }
-    .page { max-width: 760px; margin: 0 auto; padding: 24px; }
-    .card { background: #fff; border-radius: 18px; padding: 22px; box-shadow: 0 2px 14px rgba(0,0,0,.08); }
-    h1 { margin: 0 0 6px; font-size: 30px; }
-    .subtitle { margin: 0 0 18px; color: #555; line-height: 1.35; }
-    .goal { background: #eef7ee; border-left: 5px solid #5d9b61; padding: 10px 12px; border-radius: 10px; margin: 16px 0; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 11px 8px; border-bottom: 1px solid #eee; vertical-align: top; text-align: left; }
-    th { font-size: 13px; color: #555; text-transform: uppercase; letter-spacing: .04em; }
-    .check { font-size: 24px; line-height: 1; text-align: center; width: 36px; color: #777; }
-    a { color: #0b63ce; text-decoration: none; font-weight: 600; }
-    a:hover { text-decoration: underline; }
-    .track { margin-top: 18px; display: grid; gap: 12px; }
-    .box { border: 1px solid #ddd; border-radius: 14px; padding: 12px; background: #fcfcfc; }
-    .box h3 { margin: 0 0 8px; font-size: 16px; }
-    .field { margin: 8px 0; display: flex; align-items: center; gap: 8px; font-size: 15px; }
-    .field label { flex: 0 0 auto; }
-    .field input[type="text"] { border: none; border-bottom: 1px solid #bbb; background: transparent; font-size: 15px; width: 100%; padding: 2px 0; outline: none; }
-    .field input[type="text"]:focus { border-bottom-color: #5d9b61; }
-    .small { color: #666; font-size: 13px; line-height: 1.35; }
-    .rules { margin-top: 18px; padding-left: 18px; }
-    .rules li { margin: 6px 0; }
-    .day-row td { cursor: pointer; }
-    .done { background: #f0faf0; }
-    .done .check { color: #5d9b61; }
-    .tap-hint { font-size: 12px; color: #999; margin-top: 6px; }
-    @media print {
-      body { background: #fff; }
-      .page { padding: 0; max-width: none; }
-      .card { box-shadow: none; border-radius: 0; }
-      a { color: #000; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      background: #f5f2ee;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #1a1a1a;
+      padding-bottom: 40px;
     }
+
+    header {
+      background: #fff;
+      padding: 20px 18px 14px;
+      border-bottom: 1px solid #e8e3dc;
+    }
+    header h1 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+    header p  { margin: 0; font-size: 14px; color: #666; }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #888;
+      padding: 18px 18px 6px;
+    }
+
+    /* Day cards */
+    .day {
+      margin: 0 12px 8px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      overflow: hidden;
+    }
+    .day-tap {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      gap: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .day-check {
+      flex: 0 0 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all .15s;
+    }
+    .day-info { flex: 1; }
+    .day-name { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
+    .day-task { font-size: 14px; color: #555; }
+
+    .day.done .day-check {
+      background: #5d9b61;
+      border-color: #5d9b61;
+      color: #fff;
+    }
+    .day.done { background: #f0faf0; }
+    .day.done .day-name { color: #3a7a3e; }
+
+    .day-link {
+      display: block;
+      padding: 10px 16px 14px 66px;
+      font-size: 14px;
+      color: #0b63ce;
+      font-weight: 600;
+      text-decoration: none;
+      border-top: 1px solid #f0ece6;
+    }
+    .day-link:active { opacity: .6; }
+    .rest .day-link { display: none; }
+
+    /* Walk log */
+    .walk-card {
+      margin: 0 12px 8px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .walk-card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
+
+    .log-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .log-label { font-size: 14px; color: #555; width: 90px; flex-shrink: 0; }
+    .log-input {
+      flex: 1;
+      border: none;
+      border-bottom: 1.5px solid #ddd;
+      background: transparent;
+      font-size: 16px;
+      padding: 4px 0;
+      outline: none;
+      color: #1a1a1a;
+    }
+    .log-input:focus { border-bottom-color: #5d9b61; }
+
+    /* Tap-button selectors */
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+    .btn-opt {
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #ddd;
+      background: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      color: #444;
+      transition: all .12s;
+      user-select: none;
+    }
+    .btn-opt.selected { background: #5d9b61; border-color: #5d9b61; color: #fff; font-weight: 600; }
+
+    /* Week summary */
+    .summary-card {
+      margin: 0 12px 8px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .summary-card h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
+
+    .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .score-label { font-size: 14px; color: #555; width: 130px; flex-shrink: 0; }
+    .score-btns { display: flex; gap: 6px; }
+    .score-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid #ddd;
+      background: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .12s;
+    }
+    .score-btn.selected { background: #5d9b61; border-color: #5d9b61; color: #fff; }
+
+    .note-input {
+      width: 100%;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      color: #1a1a1a;
+      background: #fafafa;
+      margin-top: 4px;
+    }
+    .note-input:focus { border-color: #5d9b61; }
+
+    .rules {
+      margin: 0 12px;
+      padding: 14px 16px;
+      background: #fff9ee;
+      border-radius: 14px;
+      border-left: 4px solid #e6a817;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .rules p { margin: 4px 0; }
+
+    .checkmark-svg { display: none; }
+    .day.done .checkmark-svg { display: block; }
+    .day:not(.done) .empty-circle { display: block; }
+    .day.done .empty-circle { display: none; }
   </style>
 </head>
 <body>
-  <main class="page">
-    <section class="card">
-      <h1>Body Restart — Week 1</h1>
-      <p class="subtitle">Tap a row to check it off. Minimum success: <strong>3 checkmarks</strong>. Do not chase perfection.</p>
-      <div class="goal"><strong>Goal:</strong> create a repeatable body-care routine, not "get fit" this week.</div>
 
-      <p class="tap-hint">Tap any row to mark done / undo.</p>
-      <table aria-label="Weekly schedule">
-        <thead>
-          <tr><th></th><th>Day</th><th>Plan</th><th>Link / how</th></tr>
-        </thead>
-        <tbody id="schedule">
-          <tr class="day-row" data-i="0">
-            <td class="check">☐</td><td><strong>Sunday</strong></td>
-            <td>20 min gentle Pilates</td>
-            <td><a href="https://www.youtube.com/watch?v=fGGC9WLsI3U" onclick="event.stopPropagation()">NHS Pilates Workout 2</a><br><span class="small">First 20 min only.</span></td>
-          </tr>
-          <tr class="day-row" data-i="1">
-            <td class="check">☐</td><td><strong>Monday</strong></td>
-            <td>Rest + optional 2 min pelvic floor</td>
-            <td><a href="https://apps.apple.com/il/app/emy-kegel-exercises/id1252934443" onclick="event.stopPropagation()">Emy app (Israel)</a><br><span class="small">Optional. Gentle, not intense.</span></td>
-          </tr>
-          <tr class="day-row" data-i="2">
-            <td class="check">☐</td><td><strong>Tuesday</strong></td>
-            <td>10–15 min intentional walk</td>
-            <td><span class="small">iPhone Fitness → Workout → Outdoor Walk</span></td>
-          </tr>
-          <tr class="day-row" data-i="3">
-            <td class="check">☐</td><td><strong>Wednesday</strong></td>
-            <td>Rest</td>
-            <td><span class="small">Nothing to track.</span></td>
-          </tr>
-          <tr class="day-row" data-i="4">
-            <td class="check">☐</td><td><strong>Thursday</strong></td>
-            <td>20 min gentle Pilates</td>
-            <td><a href="https://www.youtube.com/watch?v=fGGC9WLsI3U" onclick="event.stopPropagation()">NHS Pilates Workout 2</a><br><span class="small">First 20 min only.</span></td>
-          </tr>
-          <tr class="day-row" data-i="4">
-            <td class="check">☐</td><td><strong>Friday</strong></td>
-            <td>10–20 min intentional walk</td>
-            <td><span class="small">iPhone Fitness → Workout → Outdoor Walk</span></td>
-          </tr>
-          <tr class="day-row" data-i="5">
-            <td class="check">☐</td><td><strong>Saturday</strong></td>
-            <td>Optional family walk</td>
-            <td><span class="small">Bonus only.</span></td>
-          </tr>
-        </tbody>
-      </table>
+<header>
+  <h1>Body Restart — Week 1</h1>
+  <p>Tap a day to check it off &nbsp;·&nbsp; Minimum: <strong>3 checkmarks</strong></p>
+</header>
 
-      <section class="track">
-        <div class="box">
-          <h3>Walk 1 (Tuesday)</h3>
-          <div class="field"><label>Duration:</label><input type="text" placeholder="e.g. 12 min" /></div>
-          <div class="field"><label>Avg speed:</label><input type="text" placeholder="e.g. 3.8 km/h" /></div>
-          <div class="field"><label>Felt:</label><input type="text" placeholder="easy / ok / hard" /></div>
-          <div class="field"><label>Leakage:</label><input type="text" placeholder="none / slight / more" /></div>
-        </div>
-        <div class="box">
-          <h3>Walk 2 (Friday)</h3>
-          <div class="field"><label>Duration:</label><input type="text" placeholder="e.g. 15 min" /></div>
-          <div class="field"><label>Avg speed:</label><input type="text" placeholder="e.g. 3.9 km/h" /></div>
-          <div class="field"><label>Felt:</label><input type="text" placeholder="easy / ok / hard" /></div>
-          <div class="field"><label>Leakage:</label><input type="text" placeholder="none / slight / more" /></div>
-        </div>
-        <div class="box">
-          <h3>End of week</h3>
-          <div class="field"><label>Body feeling 1–5:</label><input type="text" placeholder="e.g. 3" /></div>
-          <div class="field"><label>Energy 1–5:</label><input type="text" placeholder="e.g. 2" /></div>
-          <div class="field"><label>One sentence:</label><input type="text" placeholder="e.g. Walking felt good once I started." /></div>
-        </div>
-      </section>
+<div class="section-title">This week</div>
 
-      <ul class="rules">
-        <li>Stop or reduce if there is pain, heaviness, or increased leakage.</li>
-        <li>Apple Move Goal: keep it low (~130 cal/day). It is background noise, not the target.</li>
-        <li><strong>Minimum success = 3 checkmarks.</strong></li>
-      </ul>
-    </section>
-  </main>
+<div class="day rest" id="d-sun">
+  <div class="day-tap" onclick="toggle('d-sun')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Sunday</div>
+      <div class="day-task">20 min gentle Pilates</div>
+    </div>
+  </div>
+  <a class="day-link" href="https://www.youtube.com/watch?v=fGGC9WLsI3U">▶ NHS Pilates Workout 2 — first 20 min only</a>
+</div>
 
-  <script>
-    const rows = document.querySelectorAll('.day-row');
-    rows.forEach(row => {
-      row.addEventListener('click', () => {
-        const checked = row.classList.toggle('done');
-        row.querySelector('.check').textContent = checked ? '✅' : '☐';
-      });
-    });
-  </script>
+<div class="day rest" id="d-mon">
+  <div class="day-tap" onclick="toggle('d-mon')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Monday</div>
+      <div class="day-task">Rest · optional 2 min pelvic floor</div>
+    </div>
+  </div>
+  <a class="day-link" href="https://apps.apple.com/il/app/emy-kegel-exercises/id1252934443">→ Emy app (optional)</a>
+</div>
+
+<div class="day" id="d-tue">
+  <div class="day-tap" onclick="toggle('d-tue')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Tuesday</div>
+      <div class="day-task">10–15 min walk · record in Fitness app</div>
+    </div>
+  </div>
+</div>
+
+<div class="day rest" id="d-wed">
+  <div class="day-tap" onclick="toggle('d-wed')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Wednesday</div>
+      <div class="day-task">Rest</div>
+    </div>
+  </div>
+</div>
+
+<div class="day" id="d-thu">
+  <div class="day-tap" onclick="toggle('d-thu')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Thursday</div>
+      <div class="day-task">20 min gentle Pilates</div>
+    </div>
+  </div>
+  <a class="day-link" href="https://www.youtube.com/watch?v=fGGC9WLsI3U">▶ NHS Pilates Workout 2 — first 20 min only</a>
+</div>
+
+<div class="day" id="d-fri">
+  <div class="day-tap" onclick="toggle('d-fri')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Friday</div>
+      <div class="day-task">10–20 min walk · record in Fitness app</div>
+    </div>
+  </div>
+</div>
+
+<div class="day rest" id="d-sat">
+  <div class="day-tap" onclick="toggle('d-sat')">
+    <div class="day-check">
+      <span class="empty-circle">○</span>
+      <span class="checkmark-svg">✓</span>
+    </div>
+    <div class="day-info">
+      <div class="day-name">Saturday</div>
+      <div class="day-task">Optional family walk — bonus only</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">Walk log</div>
+
+<div class="walk-card">
+  <h3>Walk 1 · Tuesday</h3>
+  <div class="log-row">
+    <span class="log-label">Duration</span>
+    <input class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" />
+  </div>
+  <div class="log-row">
+    <span class="log-label">Avg speed</span>
+    <input class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" />
+  </div>
+  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px;">
+    <span class="log-label">Felt</span>
+    <div class="btn-row" id="felt1">
+      <button class="btn-opt" onclick="pick('felt1',this)">easy</button>
+      <button class="btn-opt" onclick="pick('felt1',this)">ok</button>
+      <button class="btn-opt" onclick="pick('felt1',this)">hard</button>
+    </div>
+  </div>
+  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px; margin-bottom:0;">
+    <span class="log-label">Leakage</span>
+    <div class="btn-row" id="leak1">
+      <button class="btn-opt" onclick="pick('leak1',this)">none</button>
+      <button class="btn-opt" onclick="pick('leak1',this)">slight</button>
+      <button class="btn-opt" onclick="pick('leak1',this)">more</button>
+    </div>
+  </div>
+</div>
+
+<div class="walk-card">
+  <h3>Walk 2 · Friday</h3>
+  <div class="log-row">
+    <span class="log-label">Duration</span>
+    <input class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" />
+  </div>
+  <div class="log-row">
+    <span class="log-label">Avg speed</span>
+    <input class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" />
+  </div>
+  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px;">
+    <span class="log-label">Felt</span>
+    <div class="btn-row" id="felt2">
+      <button class="btn-opt" onclick="pick('felt2',this)">easy</button>
+      <button class="btn-opt" onclick="pick('felt2',this)">ok</button>
+      <button class="btn-opt" onclick="pick('felt2',this)">hard</button>
+    </div>
+  </div>
+  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px; margin-bottom:0;">
+    <span class="log-label">Leakage</span>
+    <div class="btn-row" id="leak2">
+      <button class="btn-opt" onclick="pick('leak2',this)">none</button>
+      <button class="btn-opt" onclick="pick('leak2',this)">slight</button>
+      <button class="btn-opt" onclick="pick('leak2',this)">more</button>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">End of week</div>
+
+<div class="summary-card">
+  <h3>How did the week feel?</h3>
+
+  <div class="score-row">
+    <span class="score-label">Body feeling</span>
+    <div class="score-btns" id="body-score">
+      <button class="score-btn" onclick="score('body-score',this)">1</button>
+      <button class="score-btn" onclick="score('body-score',this)">2</button>
+      <button class="score-btn" onclick="score('body-score',this)">3</button>
+      <button class="score-btn" onclick="score('body-score',this)">4</button>
+      <button class="score-btn" onclick="score('body-score',this)">5</button>
+    </div>
+  </div>
+
+  <div class="score-row">
+    <span class="score-label">Energy</span>
+    <div class="score-btns" id="energy-score">
+      <button class="score-btn" onclick="score('energy-score',this)">1</button>
+      <button class="score-btn" onclick="score('energy-score',this)">2</button>
+      <button class="score-btn" onclick="score('energy-score',this)">3</button>
+      <button class="score-btn" onclick="score('energy-score',this)">4</button>
+      <button class="score-btn" onclick="score('energy-score',this)">5</button>
+    </div>
+  </div>
+
+  <div>
+    <div style="font-size:14px; color:#555; margin-bottom:6px;">One sentence</div>
+    <textarea class="note-input" rows="2" placeholder="e.g. Walking felt better than expected."></textarea>
+  </div>
+</div>
+
+<div class="section-title">Rules</div>
+<div class="rules">
+  <p>🛑 Stop if you feel pain, heaviness, or more leakage than usual.</p>
+  <p>📱 Apple Move Goal: keep at ~130 cal — background noise, not the target.</p>
+  <p>✅ <strong>3 checkmarks = success.</strong> Not 7. Not perfect. Three.</p>
+</div>
+
+<script>
+  function toggle(id) {
+    document.getElementById(id).classList.toggle('done');
+  }
+  function pick(groupId, btn) {
+    document.querySelectorAll('#' + groupId + ' .btn-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+  function score(groupId, btn) {
+    document.querySelectorAll('#' + groupId + ' .score-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+</script>
 </body>
 </html>
