@@ -33,7 +33,6 @@
       padding: 18px 18px 6px;
     }
 
-    /* Day cards */
     .day {
       margin: 0 12px 8px;
       background: #fff;
@@ -63,15 +62,9 @@
     .day-info { flex: 1; }
     .day-name { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
     .day-task { font-size: 14px; color: #555; }
-
-    .day.done .day-check {
-      background: #5d9b61;
-      border-color: #5d9b61;
-      color: #fff;
-    }
+    .day.done .day-check { background: #5d9b61; border-color: #5d9b61; color: #fff; }
     .day.done { background: #f0faf0; }
     .day.done .day-name { color: #3a7a3e; }
-
     .day-link {
       display: block;
       padding: 10px 16px 14px 66px;
@@ -82,16 +75,19 @@
       border-top: 1px solid #f0ece6;
     }
     .day-link:active { opacity: .6; }
+    .checkmark-svg { display: none; }
+    .day.done .checkmark-svg { display: block; }
+    .day:not(.done) .empty-circle { display: block; }
+    .day.done .empty-circle { display: none; }
 
-    /* Walk log */
-    .walk-card {
+    .walk-card, .summary-card {
       margin: 0 12px 8px;
       background: #fff;
       border-radius: 14px;
       padding: 16px;
       box-shadow: 0 1px 4px rgba(0,0,0,.07);
     }
-    .walk-card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
+    .walk-card h3, .summary-card h3 { margin: 0 0 12px; font-size: 16px; font-weight: 600; }
 
     .log-row {
       display: flex;
@@ -112,7 +108,6 @@
     }
     .log-input:focus { border-bottom-color: #5d9b61; }
 
-    /* Tap-button selectors */
     .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
     .btn-opt {
       padding: 7px 14px;
@@ -127,32 +122,17 @@
     }
     .btn-opt.selected { background: #5d9b61; border-color: #5d9b61; color: #fff; font-weight: 600; }
 
-    /* Week summary */
-    .summary-card {
-      margin: 0 12px 8px;
-      background: #fff;
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.07);
-    }
-    .summary-card h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
-
     .score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
     .score-label { font-size: 14px; color: #555; width: 130px; flex-shrink: 0; }
     .score-btns { display: flex; gap: 6px; }
     .score-btn {
-      width: 36px;
-      height: 36px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       border: 1.5px solid #ddd;
       background: #fff;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      color: #555;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; color: #555;
+      display: flex; align-items: center; justify-content: center;
       transition: all .12s;
     }
     .score-btn.selected { background: #5d9b61; border-color: #5d9b61; color: #fff; }
@@ -173,7 +153,7 @@
     .note-input:focus { border-color: #5d9b61; }
 
     .rules {
-      margin: 0 12px;
+      margin: 0 12px 16px;
       padding: 14px 16px;
       background: #fff9ee;
       border-radius: 14px;
@@ -184,27 +164,67 @@
     }
     .rules p { margin: 4px 0; }
 
-    .checkmark-svg { display: none; }
-    .day.done .checkmark-svg { display: block; }
-    .day:not(.done) .empty-circle { display: block; }
-    .day.done .empty-circle { display: none; }
+    /* Next week button */
+    .next-week-btn {
+      display: block;
+      margin: 0 12px 8px;
+      padding: 16px;
+      background: #5d9b61;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      width: calc(100% - 24px);
+      text-align: center;
+      letter-spacing: .01em;
+    }
+    .next-week-btn:active { opacity: .8; }
+
+    /* Past weeks */
+    .past-week {
+      margin: 0 12px 8px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      overflow: hidden;
+    }
+    .past-week-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .past-week-header-left { display: flex; flex-direction: column; gap: 3px; }
+    .past-week-title { font-size: 16px; font-weight: 600; }
+    .past-week-meta { font-size: 13px; color: #888; }
+    .past-week-dots { font-size: 18px; letter-spacing: 2px; }
+    .past-week-body {
+      display: none;
+      padding: 0 16px 14px;
+      border-top: 1px solid #f0ece6;
+    }
+    .past-week-body.open { display: block; }
+    .past-row { font-size: 14px; color: #444; padding: 4px 0; border-bottom: 1px solid #f5f5f5; }
+    .past-row:last-child { border-bottom: none; }
+    .past-row span { color: #888; margin-right: 6px; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Body Restart — Week 1</h1>
+  <h1>Body Restart — Week <span id="week-num">1</span></h1>
   <p>Tap a day to check it off &nbsp;·&nbsp; Minimum: <strong>3 checkmarks</strong></p>
 </header>
 
 <div class="section-title">This week</div>
 
 <div class="day" id="d-sun">
-  <div class="day-tap" onclick="toggle('d-sun')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-sun')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Sunday</div>
       <div class="day-task">20 min gentle Pilates</div>
@@ -214,11 +234,8 @@
 </div>
 
 <div class="day" id="d-mon">
-  <div class="day-tap" onclick="toggle('d-mon')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-mon')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Monday</div>
       <div class="day-task">Rest · optional 2 min pelvic floor</div>
@@ -228,11 +245,8 @@
 </div>
 
 <div class="day" id="d-tue">
-  <div class="day-tap" onclick="toggle('d-tue')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-tue')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Tuesday</div>
       <div class="day-task">10–15 min walk · record in Fitness app</div>
@@ -241,11 +255,8 @@
 </div>
 
 <div class="day" id="d-wed">
-  <div class="day-tap" onclick="toggle('d-wed')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-wed')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Wednesday</div>
       <div class="day-task">Rest</div>
@@ -254,11 +265,8 @@
 </div>
 
 <div class="day" id="d-thu">
-  <div class="day-tap" onclick="toggle('d-thu')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-thu')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Thursday</div>
       <div class="day-task">20 min gentle Pilates</div>
@@ -268,11 +276,8 @@
 </div>
 
 <div class="day" id="d-fri">
-  <div class="day-tap" onclick="toggle('d-fri')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-fri')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Friday</div>
       <div class="day-task">10–20 min walk · record in Fitness app</div>
@@ -281,11 +286,8 @@
 </div>
 
 <div class="day" id="d-sat">
-  <div class="day-tap" onclick="toggle('d-sat')">
-    <div class="day-check">
-      <span class="empty-circle">○</span>
-      <span class="checkmark-svg">✓</span>
-    </div>
+  <div class="day-tap" onclick="toggleDay('d-sat')">
+    <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Saturday</div>
       <div class="day-task">Optional family walk — bonus only</div>
@@ -299,13 +301,13 @@
   <h3>Walk 1 · Tuesday</h3>
   <div class="log-row">
     <span class="log-label">Duration</span>
-    <input class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" />
+    <input id="w1-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" oninput="save()" />
   </div>
   <div class="log-row">
     <span class="log-label">Avg speed</span>
-    <input class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" />
+    <input id="w1-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" oninput="save()" />
   </div>
-  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px;">
+  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
     <span class="log-label">Felt</span>
     <div class="btn-row" id="felt1">
       <button class="btn-opt" onclick="pick('felt1',this)">easy</button>
@@ -313,7 +315,7 @@
       <button class="btn-opt" onclick="pick('felt1',this)">hard</button>
     </div>
   </div>
-  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px; margin-bottom:0;">
+  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:0;">
     <span class="log-label">Leakage</span>
     <div class="btn-row" id="leak1">
       <button class="btn-opt" onclick="pick('leak1',this)">none</button>
@@ -327,13 +329,13 @@
   <h3>Walk 2 · Friday</h3>
   <div class="log-row">
     <span class="log-label">Duration</span>
-    <input class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" />
+    <input id="w2-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" oninput="save()" />
   </div>
   <div class="log-row">
     <span class="log-label">Avg speed</span>
-    <input class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" />
+    <input id="w2-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" oninput="save()" />
   </div>
-  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px;">
+  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
     <span class="log-label">Felt</span>
     <div class="btn-row" id="felt2">
       <button class="btn-opt" onclick="pick('felt2',this)">easy</button>
@@ -341,7 +343,7 @@
       <button class="btn-opt" onclick="pick('felt2',this)">hard</button>
     </div>
   </div>
-  <div class="log-row" style="align-items:flex-start; flex-direction:column; gap:6px; margin-bottom:0;">
+  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:0;">
     <span class="log-label">Leakage</span>
     <div class="btn-row" id="leak2">
       <button class="btn-opt" onclick="pick('leak2',this)">none</button>
@@ -355,7 +357,6 @@
 
 <div class="summary-card">
   <h3>How did the week feel?</h3>
-
   <div class="score-row">
     <span class="score-label">Body feeling</span>
     <div class="score-btns" id="body-score">
@@ -366,7 +367,6 @@
       <button class="score-btn" onclick="score('body-score',this)">5</button>
     </div>
   </div>
-
   <div class="score-row">
     <span class="score-label">Energy</span>
     <div class="score-btns" id="energy-score">
@@ -377,10 +377,9 @@
       <button class="score-btn" onclick="score('energy-score',this)">5</button>
     </div>
   </div>
-
   <div>
-    <div style="font-size:14px; color:#555; margin-bottom:6px;">One sentence</div>
-    <textarea class="note-input" rows="2" placeholder="e.g. Walking felt better than expected."></textarea>
+    <div style="font-size:14px;color:#555;margin-bottom:6px;">One sentence</div>
+    <textarea id="week-note" class="note-input" rows="2" placeholder="e.g. Walking felt better than expected." oninput="save()"></textarea>
   </div>
 </div>
 
@@ -391,18 +390,179 @@
   <p>✅ <strong>3 checkmarks = success.</strong> Not 7. Not perfect. Three.</p>
 </div>
 
+<button class="next-week-btn" onclick="nextWeek()">Save & start next week →</button>
+
+<div id="history-section" style="display:none;">
+  <div class="section-title">Past weeks</div>
+  <div id="history-list"></div>
+</div>
+
 <script>
-  function toggle(id) {
+  const DAYS = ['d-sun','d-mon','d-tue','d-wed','d-thu','d-fri','d-sat'];
+
+  // ── read / write helpers ──────────────────────────────────────────
+
+  function getSelected(groupId) {
+    const el = document.querySelector('#' + groupId + ' .btn-opt.selected');
+    return el ? el.textContent : '';
+  }
+  function setSelected(groupId, value) {
+    document.querySelectorAll('#' + groupId + ' .btn-opt').forEach(b => {
+      b.classList.toggle('selected', b.textContent === value);
+    });
+  }
+  function setScore(groupId, value) {
+    document.querySelectorAll('#' + groupId + ' .score-btn').forEach(b => {
+      b.classList.toggle('selected', b.textContent === value);
+    });
+  }
+
+  function readState() {
+    return {
+      week: parseInt(document.getElementById('week-num').textContent) || 1,
+      days: DAYS.filter(id => document.getElementById(id).classList.contains('done')),
+      w1_dur:  document.getElementById('w1-dur').value,
+      w1_spd:  document.getElementById('w1-spd').value,
+      w1_felt: getSelected('felt1'),
+      w1_leak: getSelected('leak1'),
+      w2_dur:  document.getElementById('w2-dur').value,
+      w2_spd:  document.getElementById('w2-spd').value,
+      w2_felt: getSelected('felt2'),
+      w2_leak: getSelected('leak2'),
+      body:    getSelected('body-score'),
+      energy:  getSelected('energy-score'),
+      note:    document.getElementById('week-note').value,
+    };
+  }
+
+  function applyState(s) {
+    document.getElementById('week-num').textContent = s.week || 1;
+    DAYS.forEach(id => {
+      const done = (s.days || []).includes(id);
+      document.getElementById(id).classList.toggle('done', done);
+    });
+    document.getElementById('w1-dur').value  = s.w1_dur  || '';
+    document.getElementById('w1-spd').value  = s.w1_spd  || '';
+    document.getElementById('w2-dur').value  = s.w2_dur  || '';
+    document.getElementById('w2-spd').value  = s.w2_spd  || '';
+    document.getElementById('week-note').value = s.note  || '';
+    setSelected('felt1',    s.w1_felt || '');
+    setSelected('leak1',    s.w1_leak || '');
+    setSelected('felt2',    s.w2_felt || '');
+    setSelected('leak2',    s.w2_leak || '');
+    setScore('body-score',   s.body   || '');
+    setScore('energy-score', s.energy || '');
+  }
+
+  function resetForm(newWeekNum) {
+    document.getElementById('week-num').textContent = newWeekNum;
+    DAYS.forEach(id => document.getElementById(id).classList.remove('done'));
+    ['w1-dur','w1-spd','w2-dur','w2-spd'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('week-note').value = '';
+    ['felt1','leak1','felt2','leak2'].forEach(g => setSelected(g, ''));
+    ['body-score','energy-score'].forEach(g => setScore(g, ''));
+  }
+
+  // ── localStorage ─────────────────────────────────────────────────
+
+  function save() {
+    localStorage.setItem('br_current', JSON.stringify(readState()));
+  }
+
+  function loadHistory() {
+    try { return JSON.parse(localStorage.getItem('br_history')) || []; }
+    catch { return []; }
+  }
+  function saveHistory(h) {
+    localStorage.setItem('br_history', JSON.stringify(h));
+  }
+
+  // ── interactions ──────────────────────────────────────────────────
+
+  function toggleDay(id) {
     document.getElementById(id).classList.toggle('done');
+    save();
   }
   function pick(groupId, btn) {
     document.querySelectorAll('#' + groupId + ' .btn-opt').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
+    save();
   }
   function score(groupId, btn) {
     document.querySelectorAll('#' + groupId + ' .score-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
+    save();
   }
+
+  function nextWeek() {
+    const state = readState();
+    const checked = state.days.length;
+    if (checked === 0 && !confirm('No days checked yet — save anyway?')) return;
+
+    const history = loadHistory();
+    history.unshift({
+      ...state,
+      savedAt: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+    });
+    saveHistory(history);
+
+    const newWeek = state.week + 1;
+    resetForm(newWeek);
+    save();
+    renderHistory();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── history rendering ─────────────────────────────────────────────
+
+  function dots(state) {
+    return DAYS.map(id => (state.days || []).includes(id) ? '✅' : '⬜').join('');
+  }
+
+  function renderHistory() {
+    const history = loadHistory();
+    const section = document.getElementById('history-section');
+    const list = document.getElementById('history-list');
+    if (!history.length) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    list.innerHTML = history.map((w, i) => `
+      <div class="past-week">
+        <div class="past-week-header" onclick="togglePast(${i})">
+          <div class="past-week-header-left">
+            <span class="past-week-title">Week ${w.week}</span>
+            <span class="past-week-meta">${w.savedAt} &nbsp;·&nbsp; ${(w.days||[]).length} days done</span>
+          </div>
+          <span class="past-week-dots" style="font-size:13px">${dots(w)}</span>
+        </div>
+        <div class="past-week-body" id="past-${i}">
+          ${row('Walk 1', [w.w1_dur, w.w1_spd, w.w1_felt, w.w1_leak].filter(Boolean).join(' · '))}
+          ${row('Walk 2', [w.w2_dur, w.w2_spd, w.w2_felt, w.w2_leak].filter(Boolean).join(' · '))}
+          ${row('Body / Energy', [w.body && 'body '+w.body, w.energy && 'energy '+w.energy].filter(Boolean).join(' · '))}
+          ${w.note ? row('Note', w.note) : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function row(label, value) {
+    if (!value) return '';
+    return `<div class="past-row"><span>${label}:</span>${value}</div>`;
+  }
+
+  function togglePast(i) {
+    const el = document.getElementById('past-' + i);
+    el.classList.toggle('open');
+  }
+
+  // ── init ──────────────────────────────────────────────────────────
+
+  (function init() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('br_current'));
+      if (saved) applyState(saved);
+    } catch {}
+    renderHistory();
+  })();
 </script>
 </body>
 </html>
