@@ -24,6 +24,65 @@
     header h1 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
     header p  { margin: 0; font-size: 14px; color: #666; }
 
+    /* Connect banner */
+    #connect-banner {
+      margin: 12px 12px 0;
+      background: #fffbe6;
+      border: 1.5px solid #f0c94a;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    #connect-banner.hidden { display: none; }
+    .connect-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #7a5c00;
+    }
+    .connect-body { padding: 0 14px 14px; display: none; }
+    .connect-body.open { display: block; }
+    .connect-body p { font-size: 13px; color: #666; margin: 0 0 8px; line-height: 1.5; }
+    .connect-input {
+      width: 100%;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      margin-bottom: 8px;
+    }
+    .connect-input:focus { border-color: #5d9b61; }
+    .connect-save-btn {
+      padding: 10px 18px;
+      background: #5d9b61;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* Sync status dot */
+    .sync-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .sync-dot.synced  { background: #5d9b61; }
+    .sync-dot.syncing { background: #f0c94a; }
+    .sync-dot.error   { background: #e05555; }
+
     .section-title {
       font-size: 12px;
       font-weight: 600;
@@ -164,7 +223,6 @@
     }
     .rules p { margin: 4px 0; }
 
-    /* Next week button */
     .next-week-btn {
       display: block;
       margin: 0 12px 8px;
@@ -178,11 +236,9 @@
       cursor: pointer;
       width: calc(100% - 24px);
       text-align: center;
-      letter-spacing: .01em;
     }
     .next-week-btn:active { opacity: .8; }
 
-    /* Past weeks */
     .past-week {
       margin: 0 12px 8px;
       background: #fff;
@@ -201,7 +257,6 @@
     .past-week-header-left { display: flex; flex-direction: column; gap: 3px; }
     .past-week-title { font-size: 16px; font-weight: 600; }
     .past-week-meta { font-size: 13px; color: #888; }
-    .past-week-dots { font-size: 18px; letter-spacing: 2px; }
     .past-week-body {
       display: none;
       padding: 0 16px 14px;
@@ -216,9 +271,21 @@
 <body>
 
 <header>
-  <h1>Body Restart — Week <span id="week-num">1</span></h1>
+  <h1>Body Restart — Week <span id="week-num">1</span> <span id="sync-dot" class="sync-dot" title="not connected"></span></h1>
   <p>Tap a day to check it off &nbsp;·&nbsp; Minimum: <strong>3 checkmarks</strong></p>
 </header>
+
+<!-- Connect to Google Sheets banner -->
+<div id="connect-banner">
+  <div class="connect-header" onclick="toggleConnect()">
+    ☁️ Connect to Google Sheets (one-time setup) <span id="connect-arrow">▾</span>
+  </div>
+  <div class="connect-body" id="connect-body">
+    <p>Paste your Apps Script web app URL here. After this, every tap and daily check-in saves automatically — no more steps.</p>
+    <input id="script-url-input" class="connect-input" type="url" placeholder="https://script.google.com/macros/s/..." />
+    <button class="connect-save-btn" onclick="saveScriptUrl()">Save & connect</button>
+  </div>
+</div>
 
 <div class="section-title">This week</div>
 
@@ -301,11 +368,11 @@
   <h3>Walk 1 · Tuesday</h3>
   <div class="log-row">
     <span class="log-label">Duration</span>
-    <input id="w1-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" oninput="save()" />
+    <input id="w1-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" oninput="onInput()" />
   </div>
   <div class="log-row">
     <span class="log-label">Avg speed</span>
-    <input id="w1-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" oninput="save()" />
+    <input id="w1-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" oninput="onInput()" />
   </div>
   <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
     <span class="log-label">Felt</span>
@@ -329,11 +396,11 @@
   <h3>Walk 2 · Friday</h3>
   <div class="log-row">
     <span class="log-label">Duration</span>
-    <input id="w2-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" oninput="save()" />
+    <input id="w2-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" oninput="onInput()" />
   </div>
   <div class="log-row">
     <span class="log-label">Avg speed</span>
-    <input id="w2-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" oninput="save()" />
+    <input id="w2-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" oninput="onInput()" />
   </div>
   <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
     <span class="log-label">Felt</span>
@@ -379,7 +446,7 @@
   </div>
   <div>
     <div style="font-size:14px;color:#555;margin-bottom:6px;">One sentence</div>
-    <textarea id="week-note" class="note-input" rows="2" placeholder="e.g. Walking felt better than expected." oninput="save()"></textarea>
+    <textarea id="week-note" class="note-input" rows="2" placeholder="e.g. Walking felt better than expected." oninput="onInput()"></textarea>
   </div>
 </div>
 
@@ -400,27 +467,25 @@
 <script>
   const DAYS = ['d-sun','d-mon','d-tue','d-wed','d-thu','d-fri','d-sat'];
 
-  // ── read / write helpers ──────────────────────────────────────────
+  // ── helpers ───────────────────────────────────────────────────────
 
   function getSelected(groupId) {
     const el = document.querySelector('#' + groupId + ' .btn-opt.selected');
     return el ? el.textContent : '';
   }
   function setSelected(groupId, value) {
-    document.querySelectorAll('#' + groupId + ' .btn-opt').forEach(b => {
-      b.classList.toggle('selected', b.textContent === value);
-    });
+    document.querySelectorAll('#' + groupId + ' .btn-opt').forEach(b =>
+      b.classList.toggle('selected', b.textContent === value));
   }
   function setScore(groupId, value) {
-    document.querySelectorAll('#' + groupId + ' .score-btn').forEach(b => {
-      b.classList.toggle('selected', b.textContent === value);
-    });
+    document.querySelectorAll('#' + groupId + ' .score-btn').forEach(b =>
+      b.classList.toggle('selected', b.textContent === value));
   }
 
   function readState() {
     return {
-      week: parseInt(document.getElementById('week-num').textContent) || 1,
-      days: DAYS.filter(id => document.getElementById(id).classList.contains('done')),
+      week:    parseInt(document.getElementById('week-num').textContent) || 1,
+      days:    DAYS.filter(id => document.getElementById(id).classList.contains('done')),
       w1_dur:  document.getElementById('w1-dur').value,
       w1_spd:  document.getElementById('w1-spd').value,
       w1_felt: getSelected('felt1'),
@@ -438,85 +503,170 @@
   function applyState(s) {
     document.getElementById('week-num').textContent = s.week || 1;
     DAYS.forEach(id => {
-      const done = (s.days || []).includes(id);
-      document.getElementById(id).classList.toggle('done', done);
+      document.getElementById(id).classList.toggle('done', (s.days||[]).includes(id));
     });
-    document.getElementById('w1-dur').value  = s.w1_dur  || '';
-    document.getElementById('w1-spd').value  = s.w1_spd  || '';
-    document.getElementById('w2-dur').value  = s.w2_dur  || '';
-    document.getElementById('w2-spd').value  = s.w2_spd  || '';
-    document.getElementById('week-note').value = s.note  || '';
-    setSelected('felt1',    s.w1_felt || '');
-    setSelected('leak1',    s.w1_leak || '');
-    setSelected('felt2',    s.w2_felt || '');
-    setSelected('leak2',    s.w2_leak || '');
-    setScore('body-score',   s.body   || '');
-    setScore('energy-score', s.energy || '');
+    document.getElementById('w1-dur').value   = s.w1_dur  || '';
+    document.getElementById('w1-spd').value   = s.w1_spd  || '';
+    document.getElementById('w2-dur').value   = s.w2_dur  || '';
+    document.getElementById('w2-spd').value   = s.w2_spd  || '';
+    document.getElementById('week-note').value = s.note   || '';
+    setSelected('felt1',     s.w1_felt || '');
+    setSelected('leak1',     s.w1_leak || '');
+    setSelected('felt2',     s.w2_felt || '');
+    setSelected('leak2',     s.w2_leak || '');
+    setScore('body-score',   s.body    || '');
+    setScore('energy-score', s.energy  || '');
   }
 
   function resetForm(newWeekNum) {
     document.getElementById('week-num').textContent = newWeekNum;
     DAYS.forEach(id => document.getElementById(id).classList.remove('done'));
-    ['w1-dur','w1-spd','w2-dur','w2-spd'].forEach(id => document.getElementById(id).value = '');
+    ['w1-dur','w1-spd','w2-dur','w2-spd'].forEach(id =>
+      document.getElementById(id).value = '');
     document.getElementById('week-note').value = '';
     ['felt1','leak1','felt2','leak2'].forEach(g => setSelected(g, ''));
     ['body-score','energy-score'].forEach(g => setScore(g, ''));
   }
 
-  // ── localStorage ─────────────────────────────────────────────────
+  // ── localStorage ──────────────────────────────────────────────────
 
-  function save() {
+  function saveLocal() {
     localStorage.setItem('br_current', JSON.stringify(readState()));
   }
-
   function loadHistory() {
-    try { return JSON.parse(localStorage.getItem('br_history')) || []; }
-    catch { return []; }
+    try { return JSON.parse(localStorage.getItem('br_history')) || []; } catch { return []; }
   }
   function saveHistory(h) {
     localStorage.setItem('br_history', JSON.stringify(h));
   }
 
+  // ── Google Sheets sync ────────────────────────────────────────────
+
+  function getScriptUrl() {
+    return localStorage.getItem('br_script_url') || '';
+  }
+
+  function setSyncDot(state) {
+    const dot = document.getElementById('sync-dot');
+    dot.className = 'sync-dot ' + state;
+    dot.title = { synced: 'saved to Google Sheets', syncing: 'saving…', error: 'sync failed', '': 'not connected' }[state] || '';
+  }
+
+  async function postToSheets(type) {
+    const url = getScriptUrl();
+    if (!url) return;
+    setSyncDot('syncing');
+    const payload = { ...readState(), type,
+      savedAt: new Date().toLocaleString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) };
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+      setSyncDot('synced');
+      localStorage.setItem('br_last_synced_date', today());
+    } catch {
+      setSyncDot('error');
+    }
+  }
+
+  function today() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function dailyAutoSync() {
+    const last = localStorage.getItem('br_last_synced_date');
+    if (last !== today()) postToSheets('daily');
+  }
+
+  // ── connect banner ────────────────────────────────────────────────
+
+  function toggleConnect() {
+    const body = document.getElementById('connect-body');
+    const arrow = document.getElementById('connect-arrow');
+    const open = body.classList.toggle('open');
+    arrow.textContent = open ? '▴' : '▾';
+  }
+
+  function saveScriptUrl() {
+    const val = document.getElementById('script-url-input').value.trim();
+    if (!val.startsWith('https://script.google.com')) {
+      alert('That doesn\'t look like an Apps Script URL. Paste the URL from the Deploy step.');
+      return;
+    }
+    localStorage.setItem('br_script_url', val);
+    document.getElementById('connect-banner').classList.add('hidden');
+    setSyncDot('syncing');
+    postToSheets('connect-test');
+    alert('Connected! Your data will now sync to Google Sheets automatically.');
+  }
+
+  function updateConnectBanner() {
+    const url = getScriptUrl();
+    if (url) {
+      document.getElementById('connect-banner').classList.add('hidden');
+      setSyncDot('synced');
+    } else {
+      document.getElementById('connect-banner').classList.remove('hidden');
+    }
+  }
+
   // ── interactions ──────────────────────────────────────────────────
+
+  let inputTimer = null;
+
+  function onInput() {
+    saveLocal();
+    clearTimeout(inputTimer);
+    inputTimer = setTimeout(() => postToSheets('input'), 2000);
+  }
 
   function toggleDay(id) {
     document.getElementById(id).classList.toggle('done');
-    save();
+    saveLocal();
+    postToSheets('tap');
   }
+
   function pick(groupId, btn) {
     document.querySelectorAll('#' + groupId + ' .btn-opt').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    save();
+    saveLocal();
+    postToSheets('tap');
   }
+
   function score(groupId, btn) {
     document.querySelectorAll('#' + groupId + ' .score-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    save();
+    saveLocal();
+    postToSheets('tap');
   }
 
   function nextWeek() {
     const state = readState();
-    const checked = state.days.length;
-    if (checked === 0 && !confirm('No days checked yet — save anyway?')) return;
+    if (state.days.length === 0 && !confirm('No days checked yet — save anyway?')) return;
 
     const history = loadHistory();
     history.unshift({
       ...state,
-      savedAt: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+      savedAt: new Date().toLocaleString('en-GB', { day:'numeric', month:'short', year:'numeric' })
     });
     saveHistory(history);
 
-    const newWeek = state.week + 1;
-    resetForm(newWeek);
-    save();
-    renderHistory();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    postToSheets('week-end').then(() => {
+      const newWeek = state.week + 1;
+      resetForm(newWeek);
+      saveLocal();
+      renderHistory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   // ── history rendering ─────────────────────────────────────────────
 
   function dots(state) {
-    return DAYS.map(id => (state.days || []).includes(id) ? '✅' : '⬜').join('');
+    return DAYS.map(id => (state.days||[]).includes(id) ? '✅' : '⬜').join('');
+  }
+
+  function row(label, value) {
+    if (!value) return '';
+    return `<div class="past-row"><span>${label}:</span>${value}</div>`;
   }
 
   function renderHistory() {
@@ -530,9 +680,9 @@
         <div class="past-week-header" onclick="togglePast(${i})">
           <div class="past-week-header-left">
             <span class="past-week-title">Week ${w.week}</span>
-            <span class="past-week-meta">${w.savedAt} &nbsp;·&nbsp; ${(w.days||[]).length} days done</span>
+            <span class="past-week-meta">${w.savedAt} · ${(w.days||[]).length} days done</span>
           </div>
-          <span class="past-week-dots" style="font-size:13px">${dots(w)}</span>
+          <span style="font-size:13px">${dots(w)}</span>
         </div>
         <div class="past-week-body" id="past-${i}">
           ${row('Walk 1', [w.w1_dur, w.w1_spd, w.w1_felt, w.w1_leak].filter(Boolean).join(' · '))}
@@ -544,14 +694,8 @@
     `).join('');
   }
 
-  function row(label, value) {
-    if (!value) return '';
-    return `<div class="past-row"><span>${label}:</span>${value}</div>`;
-  }
-
   function togglePast(i) {
-    const el = document.getElementById('past-' + i);
-    el.classList.toggle('open');
+    document.getElementById('past-' + i).classList.toggle('open');
   }
 
   // ── init ──────────────────────────────────────────────────────────
@@ -561,7 +705,9 @@
       const saved = JSON.parse(localStorage.getItem('br_current'));
       if (saved) applyState(saved);
     } catch {}
+    updateConnectBanner();
     renderHistory();
+    dailyAutoSync();
   })();
 </script>
 </body>
