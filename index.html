@@ -542,8 +542,10 @@
 
   // ── Google Sheets sync ────────────────────────────────────────────
 
+  const HARDCODED_URL = 'https://script.google.com/macros/s/AKfycbxQCsp-k6X8qBJW9KBHnAz0F_4AheRwZhw8w3U7uJTG4sWIMx_61GDxKyM3_yxXkRg/exec';
+
   function getScriptUrl() {
-    return localStorage.getItem('br_script_url') || '';
+    return HARDCODED_URL || localStorage.getItem('br_script_url') || '';
   }
 
   function setSyncDot(state) {
@@ -599,13 +601,8 @@
   }
 
   function updateConnectBanner() {
-    const url = getScriptUrl();
-    if (url) {
-      document.getElementById('connect-banner').classList.add('hidden');
-      setSyncDot('synced');
-    } else {
-      document.getElementById('connect-banner').classList.remove('hidden');
-    }
+    document.getElementById('connect-banner').classList.add('hidden');
+    setSyncDot('synced');
   }
 
   // ── interactions ──────────────────────────────────────────────────
