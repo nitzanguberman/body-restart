@@ -134,6 +134,13 @@
       border-top: 1px solid #f0ece6;
     }
     .day-link:active { opacity: .6; }
+    .day-log {
+      padding: 14px 16px 16px;
+      border-top: 1px solid #f0ece6;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
     .checkmark-svg { display: none; }
     .day.done .checkmark-svg { display: block; }
     .day:not(.done) .empty-circle { display: block; }
@@ -316,10 +323,36 @@
     <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Tuesday</div>
-      <div class="day-task">10–15 min walk · record in Fitness app</div>
+      <div class="day-task">10–15 min walk</div>
     </div>
   </div>
   <a class="day-link" href="workout://">▶ Open Fitness app → tap Outdoor Walk</a>
+  <div class="day-log">
+    <div class="log-row">
+      <span class="log-label">Duration</span>
+      <input id="w1-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" oninput="onInput()" />
+    </div>
+    <div class="log-row">
+      <span class="log-label">Avg speed</span>
+      <input id="w1-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" oninput="onInput()" />
+    </div>
+    <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
+      <span class="log-label">Felt</span>
+      <div class="btn-row" id="felt1">
+        <button class="btn-opt" onclick="pick('felt1',this)">easy</button>
+        <button class="btn-opt" onclick="pick('felt1',this)">ok</button>
+        <button class="btn-opt" onclick="pick('felt1',this)">hard</button>
+      </div>
+    </div>
+    <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:0;">
+      <span class="log-label">Leakage</span>
+      <div class="btn-row" id="leak1">
+        <button class="btn-opt" onclick="pick('leak1',this)">none</button>
+        <button class="btn-opt" onclick="pick('leak1',this)">slight</button>
+        <button class="btn-opt" onclick="pick('leak1',this)">more</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="day" id="d-wed">
@@ -348,10 +381,36 @@
     <div class="day-check"><span class="empty-circle">○</span><span class="checkmark-svg">✓</span></div>
     <div class="day-info">
       <div class="day-name">Friday</div>
-      <div class="day-task">10–20 min walk · record in Fitness app</div>
+      <div class="day-task">10–20 min walk</div>
     </div>
   </div>
   <a class="day-link" href="workout://">▶ Open Fitness app → tap Outdoor Walk</a>
+  <div class="day-log">
+    <div class="log-row">
+      <span class="log-label">Duration</span>
+      <input id="w2-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" oninput="onInput()" />
+    </div>
+    <div class="log-row">
+      <span class="log-label">Avg speed</span>
+      <input id="w2-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" oninput="onInput()" />
+    </div>
+    <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
+      <span class="log-label">Felt</span>
+      <div class="btn-row" id="felt2">
+        <button class="btn-opt" onclick="pick('felt2',this)">easy</button>
+        <button class="btn-opt" onclick="pick('felt2',this)">ok</button>
+        <button class="btn-opt" onclick="pick('felt2',this)">hard</button>
+      </div>
+    </div>
+    <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:0;">
+      <span class="log-label">Leakage</span>
+      <div class="btn-row" id="leak2">
+        <button class="btn-opt" onclick="pick('leak2',this)">none</button>
+        <button class="btn-opt" onclick="pick('leak2',this)">slight</button>
+        <button class="btn-opt" onclick="pick('leak2',this)">more</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="day" id="d-sat">
@@ -360,64 +419,6 @@
     <div class="day-info">
       <div class="day-name">Saturday</div>
       <div class="day-task">Optional family walk — bonus only</div>
-    </div>
-  </div>
-</div>
-
-<div class="section-title">Walk log</div>
-
-<div class="walk-card">
-  <h3>Walk 1 · Tuesday</h3>
-  <div class="log-row">
-    <span class="log-label">Duration</span>
-    <input id="w1-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 12 min" oninput="onInput()" />
-  </div>
-  <div class="log-row">
-    <span class="log-label">Avg speed</span>
-    <input id="w1-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.8 km/h" oninput="onInput()" />
-  </div>
-  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
-    <span class="log-label">Felt</span>
-    <div class="btn-row" id="felt1">
-      <button class="btn-opt" onclick="pick('felt1',this)">easy</button>
-      <button class="btn-opt" onclick="pick('felt1',this)">ok</button>
-      <button class="btn-opt" onclick="pick('felt1',this)">hard</button>
-    </div>
-  </div>
-  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:0;">
-    <span class="log-label">Leakage</span>
-    <div class="btn-row" id="leak1">
-      <button class="btn-opt" onclick="pick('leak1',this)">none</button>
-      <button class="btn-opt" onclick="pick('leak1',this)">slight</button>
-      <button class="btn-opt" onclick="pick('leak1',this)">more</button>
-    </div>
-  </div>
-</div>
-
-<div class="walk-card">
-  <h3>Walk 2 · Friday</h3>
-  <div class="log-row">
-    <span class="log-label">Duration</span>
-    <input id="w2-dur" class="log-input" type="text" inputmode="text" placeholder="e.g. 15 min" oninput="onInput()" />
-  </div>
-  <div class="log-row">
-    <span class="log-label">Avg speed</span>
-    <input id="w2-spd" class="log-input" type="text" inputmode="decimal" placeholder="e.g. 3.9 km/h" oninput="onInput()" />
-  </div>
-  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;">
-    <span class="log-label">Felt</span>
-    <div class="btn-row" id="felt2">
-      <button class="btn-opt" onclick="pick('felt2',this)">easy</button>
-      <button class="btn-opt" onclick="pick('felt2',this)">ok</button>
-      <button class="btn-opt" onclick="pick('felt2',this)">hard</button>
-    </div>
-  </div>
-  <div class="log-row" style="align-items:flex-start;flex-direction:column;gap:6px;margin-bottom:0;">
-    <span class="log-label">Leakage</span>
-    <div class="btn-row" id="leak2">
-      <button class="btn-opt" onclick="pick('leak2',this)">none</button>
-      <button class="btn-opt" onclick="pick('leak2',this)">slight</button>
-      <button class="btn-opt" onclick="pick('leak2',this)">more</button>
     </div>
   </div>
 </div>
